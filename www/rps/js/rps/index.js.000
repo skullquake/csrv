@@ -1,5 +1,7 @@
 //Dependency: jquery
 $(document).ready(function(){
+
+
 	var cssclass="rps";
 	var config={
 		url:window.location.origin+window.location.pathname,
@@ -18,7 +20,6 @@ $(document).ready(function(){
 	//--fn predecl
 	var idx=0;
 	var graphdata=[];
-	var graphdivbuf=[];
 	var logdata=[];for(var i=0;i<config.logdatabufsz;i++)logdata.push("");
 	var stat={
 		t0:new Date(),
@@ -164,16 +165,6 @@ function pad(pad, str, padLeft) {
 			vertical-align:bottom;
 			display:inline-block;
 		}
-		.${cssclass} #graph>hr.hline{
-			position:absolute;
-			width:100%;
-			left:0px;
-			margin:0px;
-		}
-		.${cssclass} #graph>hr.hline#avg{
-			color:#FFFFFF;
-		}
-
 		.${cssclass} #log{
 			font-size:10px;
 			background:#222222;
@@ -200,25 +191,10 @@ function pad(pad, str, padLeft) {
 			padding:4px;
 			width:90%;
 		}
-		.${cssclass} *{
-			font-family:ProggySquareTTSZ!important;;
-			font-size:17px!important;
-		}
-		.${cssclass} pre{
-			font-family:ProggySquareTTSZ!important;;
-			line-height:11px!important;
-			font-weight:bold;
-		}
 	`);
 	var div_rps=$("<div/>").addClass(cssclass);
 	var div_main=$("<div/>");
 	var div_graph=$("<div/>").attr({"id":"graph"});
-		var lbl_graph_min=$("<span/>").addClass("lbl").attr({"id":"lbl_min"});
-		var lbl_graph_max=$("<span/>").addClass("lbl").attr({"id":"lbl_max"});
-		var hr_graph_avg=$("<hr/>").addClass("hline").attr({"id":"avg"});
-		div_graph.append(lbl_graph_max)
-		div_graph.append(lbl_graph_min)
-		div_graph.append(hr_graph_avg);
 	var div_log=$("<pre/>").attr({"id":"log"});
 	var div_ctl=$("<div/>").attr({"id":"ctl"});
 	var div_config=$("<div/>").attr({"id":"config"}).hide();
@@ -237,6 +213,7 @@ function pad(pad, str, padLeft) {
 	div_ctl.append(btn_start);
 	div_ctl.append(btn_stop);
 	div_ctl.append(btn_config);
+
 	//config
 	{
 		var div_container=$("<div/>").addClass("container");
@@ -298,34 +275,15 @@ function pad(pad, str, padLeft) {
 		div_log.text(Array.from(logdata).reverse().join("\n"))
 	}
 	function updateGraph(){
-		if(graphdivbuf.length!=graphdata.length){
-			div_graph.find("div").remove();
-			graphdivbuf=[];
-			for(var i=0;i<graphdata.length;i++){
-				var div=$("<div/>");
-				div.css({
-					"width":`${100/config.graphdatabufsz}%`
-				});
-				div_graph.append(div);
-				graphdivbuf.push(div);
-			}
-		}
+		div_graph.empty();
 		var maxval=0;
-		var avg=0;
 		graphdata.forEach(function(val){
 			maxval=maxval<val?val:maxval;
 		});
 		maxval=Math.floor((maxval*100))/100;
-		lbl_graph_min.text(0);
-		lbl_graph_max.text(maxval);
-		graphdata.forEach(function(val,validx){
-			val=val/maxval*100;
-			avg+=val;
-			graphdivbuf[validx].css({
-				"height":`${val}%`,
-				"background":`hsl(${val},100%,50%)`,
-			}).text("");
-		/*
+		div_graph.append($("<span/>").text(maxval).addClass("lbl").attr({"id":"lbl_max"}));
+		div_graph.append($("<span/>").text(0).addClass("lbl").attr({"id":"lbl_min"}));
+		graphdata.forEach(function(val){
 			var val_=val/maxval*100;
 			div_graph.append($(
 				"<div/>"
@@ -336,10 +294,7 @@ function pad(pad, str, padLeft) {
 				"background":`hsl(${val_},100%,50%)`,
 			}).text("")
 			);
-		*/
 		});
-		avg/=graphdata.length;
-		hr_graph_avg.css({"bottom":avg+"%"});
 	};
 	function show_config(val){
 		div_config.show();

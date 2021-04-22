@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'ProggySquareTTSZ';
+    font-style: normal;
+    font-weight: 400;
+    src: local('ProggySquareTTSZ'), url('./ProggySquareSZ.woff') format('woff');
+}
+@font-face {
+    font-family: 'ProggySquareTT';
+    font-style: normal;
+    font-weight: 400;
+    src: local('ProggySquareTT'), url('./ProggySquare.woff') format('woff');
+}
+
+
