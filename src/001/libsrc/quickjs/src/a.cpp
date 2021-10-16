@@ -70,23 +70,12 @@ DLL_LOCAL static bool qjs_initialized=false;
 			)","<input>",JS_EVAL_TYPE_MODULE);
 
 		}
-	}else{
 	}
 	try{
 		//context.evalFile("./js/a.js",JS_EVAL_TYPE_MODULE);
 		context.eval(R"(
+			a=typeof(a)=="undefined"?0:a;a++;
 			mg.printf('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n');
-			a=typeof(a)=="undefined"?0:a;
-			a++;
-			console.log(a);
-			/*
-			for(var i=0;i<8;i++){
-				for(var j=0;j<8;j++){
-					mg.printf_chunk('['+i+']['+j+']');
-				}
-				mg.printf_chunk('\n');
-			}
-			*/
 			mg.printf_chunk(a+'\n');
 			mg.printf_chunk('');
 		)");
