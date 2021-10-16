@@ -9,6 +9,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
+Environment="LD_LIBRARY_PATH=/usr/local/lib64"
 WorkingDirectory=`pwd`
 ExecStart=`pwd`/bin/x86_64-redhat-linux/a.out 1212
 [Install]

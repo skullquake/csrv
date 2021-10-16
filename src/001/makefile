@@ -52,6 +52,10 @@ $(LIBAPP):
 run:$(BIN)
 	echo running $(BIN) $(PORT)
 	@$(BIN) $(PORT)
+run_centos:LD_LIBRARY_PATH=/usr/local/lib64
+run_centos:$(BIN)
+	echo running $(BIN) $(PORT)
+	@$(BIN) $(PORT)
 proxy:$(BIN)
 	ngrok http 8000
 openport:
