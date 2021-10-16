@@ -1,0 +1,16 @@
+#!/bin/bash
+sudo cat << EOF > /etc/systemd/system/csrv000.service
+[Unit]
+Description=CSRV000 service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=`pwd`
+ExecStart=`pwd`/bin/x86_64-redhat-linux/a.out 1212
+[Install]
+WantedBy=multi-user.target
+EOF
