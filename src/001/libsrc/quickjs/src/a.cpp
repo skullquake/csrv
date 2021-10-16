@@ -8,14 +8,22 @@
 #include<cstring>
 #include"quickjspp.hpp"
 
-static int reqidx=0;
+void __attribute__((constructor))ctor();
+void __attribute__((destructor))dtor();
+static void ctor(){
+}
+static void dtor(){
+}
+
 EXTERN_C_BEG
 DLL_PUBLIC void entry(struct mg_connection*c,int ev,void*ev_data,void*fn_data);
 EXTERN_C_END
 DLL_PUBLIC void entry(struct mg_connection*c,int ev,void*ev_data,void*fn_data){
-	{
-		qjs::Runtime runtime;
-		qjs::Context context(runtime);
+DLL_LOCAL static qjs::Runtime runtime;
+DLL_LOCAL static qjs::Context context(runtime);
+DLL_LOCAL static bool qjs_initialized=false;
+	if(!qjs_initialized){
+		qjs_initialized=true;
 		JSRuntime*rt;
 		JSContext*ctx;
 		rt=runtime.rt;
@@ -60,32 +68,39 @@ DLL_PUBLIC void entry(struct mg_connection*c,int ev,void*ev_data,void*fn_data){
 			)","<input>",JS_EVAL_TYPE_MODULE);
 
 		}
-		try{
-			//context.evalFile("./js/a.js",JS_EVAL_TYPE_MODULE);
-			context.eval(R"(
-				mg.printf('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n');
-				for(var i=0;i<8;i++){
-					for(var j=0;j<8;j++){
-						mg.printf_chunk('['+i+']['+j+']');
-					}
-					mg.printf_chunk('\n');
-				}
-				mg.printf_chunk('');
-			)");
+	}else{
+	}
+	try{
+		//context.evalFile("./js/a.js",JS_EVAL_TYPE_MODULE);
+		context.eval(R"(
+			mg.printf('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n');
+			a=typeof(a)=="undefined"?0:a;
+			a++;
+			console.log(a);
 			/*
-			*/
-		}catch(qjs::exception){
-			mg_printf(c,"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n");
-			mg_http_printf_chunk(c,"Error:\n");
-			auto exc=context.getException();
-			std::cerr<<(std::string)exc<<std::endl;
-			mg_http_printf_chunk(c,"\t%s\n",((std::string)exc).c_str());
-			if((bool)exc["stack"]){
-				std::cerr<<(std::string)exc["stack"]<<std::endl;
-				mg_http_printf_chunk(c,"\t%s\n",((std::string)exc["stack"]).c_str());
+			for(var i=0;i<8;i++){
+				for(var j=0;j<8;j++){
+					mg.printf_chunk('['+i+']['+j+']');
+				}
+				mg.printf_chunk('\n');
 			}
-			mg_http_printf_chunk(c,"");
+			*/
+			mg.printf_chunk(a+'\n');
+			mg.printf_chunk('');
+		)");
+		/*
+		*/
+	}catch(qjs::exception){
+		mg_printf(c,"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n");
+		mg_http_printf_chunk(c,"Error:\n");
+		auto exc=context.getException();
+		std::cerr<<(std::string)exc<<std::endl;
+		mg_http_printf_chunk(c,"\t%s\n",((std::string)exc).c_str());
+		if((bool)exc["stack"]){
+			std::cerr<<(std::string)exc["stack"]<<std::endl;
+			mg_http_printf_chunk(c,"\t%s\n",((std::string)exc["stack"]).c_str());
 		}
+		mg_http_printf_chunk(c,"");
 	}
 }
 

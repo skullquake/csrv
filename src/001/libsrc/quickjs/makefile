@@ -30,15 +30,15 @@ CFLAGS+=-D_GNU_SOURCE
 CFLAGS+=-DCONFIG_VERSION=\"2020-11-08\"
 CFLAGS+=-DHAVE_STRUCT_TIMEVAL
 CXXFLAGS+=$(CFLAGS)
+CXXFLAGS+=-std=c++17
+CFLAGS+=-fpermissive
 #CFLAGS+=-DCONFIG_ATOMICS
-CFLAGS+=-DENABLE_TCC
+#CFLAGS+=-DENABLE_TCC
 #CFLAGS+=-DCS_ENABLE_DEBUG
 CFLAGS+=-DCS_P_UNIX
 LDFLAGS+=-shared
 LDFLAGS+=-fpic
 LDFLAGS+=-fvisibility=hidden
-CFLAGS+=-fpermissive
-CXXFLAGS+=-std=c++17
 ifneq (,$(findstring mingw,$(TGT_MACHINE)))
 	LDFLAGS+=-L$(LIBAPPDIR)
 	LDFLAGS+=-static
@@ -77,7 +77,7 @@ $(BINDIR)/%.o: %.c
 	@printf "generating [c]   $@...\n"
 	@mkdir -p $(@D)
 	@$(CC)\
-		$(CFLAGS) \
+		$(CXXFLAGS) \
 		-c $< \
 		$(LDFLAGS) \
 		-o $@
