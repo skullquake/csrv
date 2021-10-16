@@ -1,0 +1,23 @@
+#!/bin/bash
+#curl 'http://localhost:8000/mock/twilio/Conversations/Configuration/Webhooks' \
+#  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36' \
+#  -H 'Referer: http://localhost:8080/' \
+#  -H 'Authorization: Basic QUNjMjllODc5ZTcxZDg5NDMzZTg4ZmNhOWE2YTZiMDAzYjo4YjBjNGEwZmRmZjQxZDI4OGIwODdhZDk1MTAxNTUwYg==' \
+#  -H 'Content-type: application/x-www-form-urlencoded' \
+#  --compressed \
+#  -v
+curl 'http://localhost:8000/mock/twilio/Conversations/Configuration/Webhooks' \
+  -X 'OPTIONS' \
+  -H 'Connection: keep-alive' \
+  -H 'Accept: */*' \
+  -H 'Access-Control-Request-Method: GET' \
+  -H 'Access-Control-Request-Headers: authorization' \
+  -H 'Origin: http://localhost:8080' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-site' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Referer: http://localhost:8080/' \
+  -H 'Accept-Language: en-US,en;q=0.9' \
+  --compressed\
+  -v

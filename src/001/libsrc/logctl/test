@@ -1,0 +1,7 @@
+#!/bin/bash
+curl http://localhost:8000/logctl?level=0
+curl http://localhost:8000/logctl?level=1
+curl http://localhost:8000/logctl?level=2
+curl http://localhost:8000/logctl?level=3
+curl http://localhost:8000/logctl?level=4
+curl http://localhost:8000/logctl?flush=true
