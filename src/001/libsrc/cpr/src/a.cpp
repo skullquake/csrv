@@ -20,8 +20,8 @@ static void dtor(){
 void entry(struct mg_connection*c,int ev,void*ev_data,void*fn_data){
 	mg_printf(c,"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n");
 	mg_http_printf_chunk(c,"tpl:%d\n\n",reqidx++);
-	//cpr::Response r = cpr::Get(cpr::Url{"http://skullquake.dedicated.co.za"},
-	cpr::Response r = cpr::Get(cpr::Url{"http://localhost:80"},
+	cpr::Response r = cpr::Get(cpr::Url{"http://skullquake.dedicated.co.za"},
+	//cpr::Response r = cpr::Get(cpr::Url{"http://localhost:80"},
 		//cpr::Authentication{"user", "pass"},
 		cpr::Parameters{{"anon", "true"}, {"key", "value"}}
 	);
