@@ -5,6 +5,7 @@ ifeq ($(CC),)
 endif
 COMPILERVERSION=$(shell $(CC) -dumpversion)
 TGT_MACHINE=$(shell $(CC) -dumpmachine)
+PORT=1212
 APPNAM=a
 BINDIR=./bin/
 LIBAPPNAM=app
@@ -49,10 +50,14 @@ $(BIN):$(SRC) $(LIBAPP)
 $(LIBAPP):
 	make -C $(LIBAPPDIR)
 run:$(BIN)
-	echo running $(BIN)
-	@$(BIN)
+	echo running $(BIN) $(PORT)
+	@$(BIN) $(PORT)
 proxy:$(BIN)
 	ngrok http 8000
+openport:
+	firewall-cmd --zone=public --permanent --add-port=$(PORT)/tcp
+	firewall-cmd --zone=public --permanent --add-port=$(PORT)/udp
+	firewall-cmd --reload
 test:$(BIN)
 	curl http://localhost:8000/lib/a.so
 	curl http://localhost:8000/lib/a.dll

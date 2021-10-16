@@ -7,6 +7,23 @@
 #include<SQLiteCpp/VariadicBind.h>
 #include<cstdio>
 #include"mongoose.h"
+#include <string>
+#include <sstream>
+/*
+https://stackoverflow.com/questions/12975341/to-string-is-not-a-member-of-std-says-g-mingw
+redhat old cxxlib fix
+g++ (GCC) 4.8.5 20150623 (Red Hat 4.8.5-39)
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*/
+namespace patch{
+    template<typename T>std::string to_string(const T&n){
+        std::ostringstream stm;
+        stm<<n;
+        return stm.str();
+    }
+}
 DLL_LOCAL int reqidx=0;
 static SQLite::Database*dbP;
 DLL_LOCAL void __attribute__((constructor))ctor(){
@@ -16,16 +33,12 @@ DLL_LOCAL void __attribute__((constructor))ctor(){
 	try{
 		{
 			SQLite::Transaction txn(db);
-			db.exec(R"(DROP TABLE IF EXISTS A)");
+			db.exec("DROP TABLE IF EXISTS A");
 			txn.commit();
 		}
 		{
 			SQLite::Transaction txn(db);
-			db.exec(R"(
-				CREATE TABLE IF NOT EXISTS A
-				(
-					val		TEXT
-				))");
+			db.exec("CREATE TABLE IF NOT EXISTS A (val TEXT)");
 			txn.commit();
 		}
 	}catch(std::exception e){
@@ -58,6 +71,8 @@ int test(){
 			SQLite::Transaction txn(db);
 			SQLite::Statement stmt(
 				db,
+				"INSERT INTO A(val)VALUES(?)"
+				/* no raw strings
 				R"(
 					INSERT INTO A
 					(
@@ -68,19 +83,23 @@ int test(){
 						?
 					)
 				)"
+				*/
 			);
-			stmt.bind(1,std::string("a")+std::to_string(0));
+			stmt.bind(1,std::string("a")+patch::to_string(0));
 			stmt.exec();
 			txn.commit();
 		}
 		{
 			SQLite::Statement q0(
 				db,
+				"SELECT * FROM A"
+				/* no raw strings
 				R"(
 					SELECT 
 					*
 					FROM A
 				)"
+				*/
 				
 			);
 			while(q0.executeStep()){

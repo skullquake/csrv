@@ -5,6 +5,7 @@
 #include"mongoose.h"
 #include"map.h"
 #include"./dlfcn/dlfcn.h"
+#define HOST "http://0.0.0.0"
 #ifdef _WIN32
 #define DSOEXT ".dll"
 #define PORT "8001"
@@ -28,7 +29,7 @@ void*context;//passed in when event handler is called
 
 //static const char*s_web_root_dir="./www,/alt=./www2";//does not work
 static const char*s_web_root_dir="./www";
-static const char*s_listening_address="http://0.0.0.0:"PORT;
+static char*s_listening_address=NULL;//"http://0.0.0.0:"PORT;
 static const char*s_dsouripfx="";
 static const char*s_dsopath="./www";
 
@@ -44,6 +45,7 @@ static void free_map_hdl_entry(void* key,size_t ksize,uintptr_t value,void*usr);
 static void free_map_dso_entry(void* key,size_t ksize,uintptr_t value,void*usr);
 static void ov_free(void*key,size_t ksize,uintptr_t value,void*usr);
 int appmain(int argc,char*argv[]){
+	char*port=NULL;
 	printf("appmain:beg\n");
 	printf("appmain:initializing dso map...\n");
 	mglb=hashmap_create();
@@ -55,6 +57,17 @@ int appmain(int argc,char*argv[]){
 	printf("appmain:starting server...\n");
 	struct mg_mgr mgr;
 	mg_mgr_init(&mgr);
+	if(argc==2){
+		printf("custom port:%s\n",argv[1]);
+		port=argv[1];
+	}else{
+		printf("default port:%s\n",PORT);
+	}
+	s_listening_address=(char*)malloc(strlen(HOST)+1+strlen(port));
+	s_listening_address[0]='\0';
+	strcat(s_listening_address,HOST);
+	strcat(s_listening_address,":");
+	strcat(s_listening_address,port);
 	struct mg_connection*c=mg_http_listen(&mgr,s_listening_address,cb,context);//&mgr);
 	mg_log_set("3");
 	if(c!=NULL){
@@ -71,6 +84,7 @@ int appmain(int argc,char*argv[]){
 	hashmap_free(mglb);
 	hashmap_free(mloc);
 	printf("appmain:end\n");
+	free(s_listening_address);
 	return 0;
 }
 static void cb(struct mg_connection*c,int ev,void*ev_data,void*fn_data){

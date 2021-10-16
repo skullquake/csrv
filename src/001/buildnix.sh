@@ -1,6 +1,7 @@
 #!/bin/bash
-CC=gcc
+CC=/usr/bin/gcc
+CXX=/usr/bin/g++
 find ./libsrc|grep -i makefile|while read PTH;do
-	CC=$CC make -C `dirname $PTH`
+	CC=$CC CXX=$CXX make -C `dirname $PTH`
 done
-CC=$CC make
+CC=$CC CXX=$CXX make
