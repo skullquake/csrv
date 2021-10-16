@@ -131,7 +131,8 @@ static inline uint32_t hash_data(const unsigned char* data, size_t size)
 {
 	size_t nblocks = size / 8;
 	uint64_t hash = HASHMAP_HASH_INIT;
-	for (size_t i = 0; i < nblocks; ++i)
+	size_t i;
+	for (i = 0; i < nblocks; ++i)
 	{
 		hash ^= (uint64_t)data[0] << 0 | (uint64_t)data[1] << 8 |
 			 (uint64_t)data[2] << 16 | (uint64_t)data[3] << 24 |
