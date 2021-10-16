@@ -77,7 +77,7 @@ $(BINDIR)/%.o: %.c
 	@printf "generating [c]   $@...\n"
 	@mkdir -p $(@D)
 	@$(CC)\
-		$(CXXFLAGS) \
+		$(CFLAGS) \
 		-c $< \
 		$(LDFLAGS) \
 		-o $@

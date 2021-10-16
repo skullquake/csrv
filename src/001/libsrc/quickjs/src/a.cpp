@@ -8,12 +8,14 @@
 #include<cstring>
 #include"quickjspp.hpp"
 
-void __attribute__((constructor))ctor();
-void __attribute__((destructor))dtor();
-static void ctor(){
+/*
+DLL_LOCAL void __attribute__((constructor))ctor();
+DLL_LOCAL void __attribute__((destructor))dtor();
+DLL_LOCAL static void ctor(){
 }
-static void dtor(){
+DLL_LOCAL static void dtor(){
 }
+*/
 
 EXTERN_C_BEG
 DLL_PUBLIC void entry(struct mg_connection*c,int ev,void*ev_data,void*fn_data);
