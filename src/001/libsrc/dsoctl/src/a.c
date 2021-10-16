@@ -16,7 +16,5 @@ void entry(struct mg_connection*c,int ev,void*ev_data,void*fn_data){
 	mg_http_printf_chunk(c,"");//end
 }
 static void p(void*key,size_t ksize,uintptr_t*value,void*c){
-	//printf("%s:%p\n",key,(void*)value);
-//	mg_http_printf_chunk(c,"%s:%p",key,(void*)value);
 	mg_http_printf_chunk((struct mg_connection*)c,"%-16s: %p\n",key,(void*)value);
 }
